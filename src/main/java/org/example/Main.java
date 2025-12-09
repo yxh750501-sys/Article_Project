@@ -16,9 +16,11 @@ public class Main {
         System.out.println("==프로그램 시작==");
 
         int lastArticleId = 3;
-        int lastMemberId = 0;
 
-        makeTestData();
+        int lastMemberId = 3;
+
+        articleMakeTestData();
+        memberMakeTestData();
 
         while (true) {
             System.out.print("명령어 ) ");
@@ -198,15 +200,28 @@ public class Main {
         return null;
     }
 
+/**
+ * 게시글 테스트 데이터 생성
+ **/
+
+private static void articleMakeTestData() {
+    System.out.println("==게시글 테스트 데이터 생성==");
+    articles.add(new Article(1, "2025-12-07 12:12:12", "2025-12-07 12:12:12", "제목 123", "내용 1"));
+    articles.add(new Article(2, Util.getNowStr(), Util.getNowStr(), "제목 23", "내용 2"));
+    articles.add(new Article(3, Util.getNowStr(), Util.getNowStr(), "제목 1234", "내용 3"));
+}
+
     /**
-     * 게시글 테스트 데이터 생성
+     * 회원 테스트 데이터 생성
      **/
-    private static void makeTestData() {
-        System.out.println("==테스트 데이터 생성==");
-        articles.add(new Article(1, "2025-12-07 12:12:12", "2025-12-07 12:12:12", "제목 123", "내용 1"));
-        articles.add(new Article(2, Util.getNowStr(), Util.getNowStr(), "제목 23", "내용 2"));
-        articles.add(new Article(3, Util.getNowStr(), Util.getNowStr(), "제목 1234", "내용 3"));
+    private static void memberMakeTestData() {
+        System.out.println("==회원 테스트 데이터 생성==");
+        members.add(new Member(1, Util.getNowStr(), Util.getNowStr(), "test1", "test1","회원1"));
+        members.add(new Member(2, Util.getNowStr(), Util.getNowStr(), "test2", "test2","회원2"));
+        members.add(new Member(3, Util.getNowStr(), Util.getNowStr(), "test3", "test3","회원3"));
     }
+
+
 }
 
 class Member {
