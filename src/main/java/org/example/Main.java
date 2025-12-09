@@ -7,6 +7,7 @@ import java.util.Scanner;
 public class Main {
 
     static List<Article> articles = new ArrayList<>();
+    static List<Member> members = new ArrayList<>();
 
     public static void main(String[] args) {
 
@@ -15,6 +16,7 @@ public class Main {
         System.out.println("==프로그램 시작==");
 
         int lastArticleId = 3;
+        int lastMemberId = 0;
 
         makeTestData();
 
@@ -29,7 +31,42 @@ public class Main {
                 continue;
             }
 
-            if (cmd.equals("article write")) {
+            if (cmd.equals("member join")) {
+                System.out.println("==회원 가입==");
+                int id = lastMemberId + 1;
+                String loginId = null;
+                while (true) {
+                    System.out.print("로그인 아이디 : ");
+                    loginId = sc.nextLine().trim();
+                    if (isJoinableLoginId(loginId) == false) {
+                        System.out.println("이미 사용중인 loginId");
+                        continue;
+                    }
+                    break;
+                }
+                String password = null;
+                while (true) {
+                    System.out.print("비밀번호 : ");
+                    password = sc.nextLine().trim();
+                    System.out.print("비밀번호 확인: ");
+                    String passwordConfirm = sc.nextLine().trim();
+                    if (password.equals(passwordConfirm) == false) {
+                        System.out.println("비번 확인해");
+                        continue;
+                    }
+                    break;
+                }
+                System.out.print("이름 : ");
+                String name = sc.nextLine().trim();
+                String regDate = Util.getNowStr();
+                String updateDate = Util.getNowStr();
+
+                Member member = new Member(id, regDate, updateDate, loginId, password, name);
+                members.add(member);
+
+                System.out.println(id + "번 회원이 가입 되었습니다.");
+                lastMemberId++;
+            } else if (cmd.equals("article write")) {
                 System.out.println("==게시글 작성==");
                 int id = lastArticleId + 1;
                 System.out.print("제목 : ");
@@ -44,15 +81,12 @@ public class Main {
 
                 System.out.println(id + "번 글이 작성되었습니다.");
                 lastArticleId++;
-
             } else if (cmd.startsWith("article list")) {
                 System.out.println("==게시글 목록==");
                 if (articles.size() == 0) {
                     System.out.println("아무것도 없음");
-
                     continue;
                 }
-
 
                 String searchKeyword = cmd.substring("article list".length()).trim();
 
@@ -146,8 +180,16 @@ public class Main {
         sc.close();
     }
 
-    private static Article getArticleById(int id) {
+    private static boolean isJoinableLoginId(String loginId) {
+        for (Member member : members) {
+            if (member.getLoginId().equals(loginId)) {
+                return false;
+            }
+        }
+        return true;
+    }
 
+    private static Article getArticleById(int id) {
         for (Article article : articles) {
             if (article.getId() == id) {
                 return article;
@@ -161,10 +203,75 @@ public class Main {
      **/
     private static void makeTestData() {
         System.out.println("==테스트 데이터 생성==");
-
         articles.add(new Article(1, "2025-12-07 12:12:12", "2025-12-07 12:12:12", "제목 123", "내용 1"));
         articles.add(new Article(2, Util.getNowStr(), Util.getNowStr(), "제목 23", "내용 2"));
         articles.add(new Article(3, Util.getNowStr(), Util.getNowStr(), "제목 1234", "내용 3"));
+    }
+}
+
+class Member {
+    private int id;
+    private String regDate;
+    private String updateDate;
+    private String loginId;
+    private String password;
+    private String name;
+
+    public Member(int id, String updateDate, String regDate, String loginId, String password, String name) {
+        this.id = id;
+        this.updateDate = updateDate;
+        this.regDate = regDate;
+        this.loginId = loginId;
+        this.password = password;
+        this.name = name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getRegDate() {
+        return regDate;
+    }
+
+    public void setRegDate(String regDate) {
+        this.regDate = regDate;
+    }
+
+    public String getLoginId() {
+        return loginId;
+    }
+
+    public void setLoginId(String loginId) {
+        this.loginId = loginId;
+    }
+
+    public String getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(String updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
 
@@ -222,6 +329,4 @@ class Article {
     public void setBody(String body) {
         this.body = body;
     }
-
-
 }
