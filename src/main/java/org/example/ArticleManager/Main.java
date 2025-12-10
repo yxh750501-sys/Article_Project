@@ -3,6 +3,6 @@ package org.example.ArticleManager;
 
 public class Main {
     public static void main(String[] args) {
-        new App().run();
+        new App().run();  // 앱 실행
     }
 }
