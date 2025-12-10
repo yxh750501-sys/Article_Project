@@ -135,6 +135,13 @@ public class ArticleController extends Controller {
             System.out.println("해당 게시글은 없습니다");
             return;
         }
+
+        // 권한 체크
+        if(foundArticle.getMemberId() != loginedMember.getId()) {
+            System.out.println("권한 없음");
+            return;
+        }
+
         articles.remove(foundArticle);
         System.out.println(id + "번 게시글이 삭제되었습니다");
     }
@@ -150,6 +157,13 @@ public class ArticleController extends Controller {
             System.out.println("해당 게시글은 없습니다");
             return;
         }
+
+        // 권한 체크
+        if(foundArticle.getMemberId() != loginedMember.getId()) {
+            System.out.println("권한 없음");
+            return;
+        }
+
         System.out.println("기존 title : " + foundArticle.getTitle());
         System.out.println("기존 body : " + foundArticle.getBody());
         System.out.print("새 제목 : ");
@@ -179,7 +193,6 @@ public class ArticleController extends Controller {
      **/
     public void makeTestData() {
         System.out.println("==게시글 테스트 데이터 생성==");
-
         articles.add(new Article(1, "2025-12-07 12:12:12", "2025-12-07 12:12:12", "제목 123", "내용 1", 1));
         articles.add(new Article(2, Util.getNowStr(), Util.getNowStr(), "제목 23", "내용 2", 1));
         articles.add(new Article(3, Util.getNowStr(), Util.getNowStr(), "제목 1234", "내용 3", 2));
