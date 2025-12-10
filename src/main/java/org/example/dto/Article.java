@@ -4,7 +4,9 @@ public class Article extends Dto{
 
     private String title;
     private String body;
-// 생성자 : 게시글 객체를 만들 때 필요한 값들을 넣어준다.
+
+    private String member;
+
     public Article(int id, String regDate, String updateDate, String title, String body) {
         this.id = id;
         this.regDate = regDate;
@@ -12,7 +14,7 @@ public class Article extends Dto{
         this.title = title;
         this.body = body;
     }
-     // Getter & Setter 변수를 꺼내고 / 바꾸기 위한 메서드
+
     public int getId() {
         return id;
     }
