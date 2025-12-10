@@ -7,25 +7,32 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class MemberController extends Controller {  // 회원 관련 기능을 담당하는 컨트롤러
+public class MemberController extends Controller {
 
-    private Scanner sc;           // 입력 받기 위한 scanner
-    private List<Member> members; // 회원 객체들을 저장할 리스트
-    private String cmd;           // 현재 명령어 저장
+    private Scanner sc;
+    private List<Member> members;
+    private String cmd;
+    private Member loginedMember = null;
 
-    private int lastMemberId = 3; // 테스트용 회원 3명 존재
+    private int lastMemberId = 3;
 
     public MemberController(Scanner sc) {
         this.sc = sc;
         members = new ArrayList<>();
     }
 
-    public void doAction(String cmd, String actionMethodName) { // App에서 실제 기능 실행을 요청하면 이 메서드가 판단해서 실행.
+    public void doAction(String cmd, String actionMethodName) {
         this.cmd = cmd;
 
         switch (actionMethodName) {
             case "join":
                 doJoin();
+                break;
+            case "login":
+                doLogin();
+                break;
+            case "logout":
+                doLogout();
                 break;
             default:
                 System.out.println("Invalid action method");
@@ -33,11 +40,61 @@ public class MemberController extends Controller {  // 회원 관련 기능을 �
         }
     }
 
-    private void doJoin() {   //  회원가입 기능
+    private boolean isLogined(){
+        return loginedMember != null;
+    }
+
+    private void doLogout() {
+        if(!isLogined()) {
+            System.out.println("이미 로그아웃 중");
+            return;
+        }
+
+        loginedMember = null;
+
+        System.out.println("로그아웃 됨");
+    }
+
+    private void doLogin() {
+        if(isLogined()) {
+            System.out.println("이미 로그인 중");
+            return;
+        }
+        System.out.println("==로그인==");
+
+        System.out.print("로그인 아이디 : ");
+        String loginId = sc.nextLine().trim();
+        System.out.print("비밀번호 : ");
+        String password = sc.nextLine().trim();
+
+        // 얘 내 회원인가??? -> 사용자가 방금 입력한 로그인 아이디와 일치하는 회원이 나한테 있나?
+
+        Member member = getMemberByLoginId(loginId);
+
+        //  있어 없어?
+        if (member == null) {
+            System.out.println("일치하는 회원 없음");
+            return;
+        }
+
+        // 내가 알고있는 이 사람의 비번이랑 지금 사용자가 입력한거랑 같나?
+        if (member.getPassword().equals(password) == false) {
+            System.out.println("비번 틀렸어");
+            return;
+        }
+
+        // 로그인 성공
+        loginedMember = member; // 해당 변수에 현재 로그인 한 회원의 정보 저장
+
+        System.out.println(loginedMember.getName() + "님, 로그인 성공!");
+    }
+
+
+    private void doJoin() {
         System.out.println("==회원 가입==");
-        int id = lastMemberId + 1;  // 새 회원 id
+        int id = lastMemberId + 1;
         String loginId = null;
-        while (true) {   // 아이디 입력, 중복 체크
+        while (true) {
             System.out.print("로그인 아이디 : ");
             loginId = sc.nextLine().trim();
             if (isJoinableLoginId(loginId) == false) {
@@ -46,7 +103,7 @@ public class MemberController extends Controller {  // 회원 관련 기능을 �
             }
             break;
         }
-        String password = null; // 비밀번호 입력, 비밀번호 확인 체크
+        String password = null;
         while (true) {
             System.out.print("비밀번호 : ");
             password = sc.nextLine().trim();
@@ -58,16 +115,25 @@ public class MemberController extends Controller {  // 회원 관련 기능을 �
             }
             break;
         }
-        System.out.print("이름 : ");   // 이름 입력
-        String name = sc.nextLine().trim(); // 등록 날짜와 수정 날짜 기록
+        System.out.print("이름 : ");
+        String name = sc.nextLine().trim();
         String regDate = Util.getNowStr();
         String updateDate = Util.getNowStr();
 
         Member member = new Member(id, regDate, updateDate, loginId, password, name);
-        members.add(member);  // 새 회원 객체 생성
+        members.add(member);
 
         System.out.println(id + "번 회원이 가입 되었습니다.");
         lastMemberId++;
+    }
+
+    private Member getMemberByLoginId(String loginId) {
+        for (Member member : members) {
+            if (member.getLoginId().equals(loginId)) {
+                return member;
+            }
+        }
+        return null;
     }
 
     private boolean isJoinableLoginId(String loginId) {

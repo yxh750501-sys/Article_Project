@@ -13,7 +13,7 @@ public class Util {
         LocalDateTime now = LocalDateTime.now(); // 현재 시스템의 날짜 / 시간 가져오기
         String formatedNow = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         // 보기 좋은 형식으로 바꾸기
-        
+
         return formatedNow;
     }
 }
